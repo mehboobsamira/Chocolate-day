@@ -1,0 +1,259 @@
+document.addEventListener("DOMContentLoaded",()=>{
+
+
+
+const lock=document.getElementById("lock");
+
+const app=document.getElementById("app");
+
+const pass=document.getElementById("pass");
+
+
+
+const music=document.getElementById("music");
+
+const heart=document.getElementById("heartSound");
+
+const unwrap=document.getElementById("unwrapSound");
+
+
+
+const counter=document.getElementById("counter");
+
+const nameEl=document.getElementById("name");
+
+
+
+const hugBtn=document.getElementById("hugBtn");
+
+const nextBtn=document.getElementById("nextBtn");
+
+
+
+const choice=document.querySelector(".choice");
+
+const gallery=document.querySelector(".gallery");
+
+const finalBox=document.querySelector(".final");
+
+
+
+const photos=document.querySelectorAll(".photo");
+
+
+
+/* UNLOCK */
+
+window.unlock=()=>{
+
+if(pass.value==="2828"){
+
+lock.style.display="none";
+
+app.classList.remove("hidden");
+
+music.play().catch(()=>{});
+
+}else alert("Wrong password 😅");
+
+};
+
+
+
+/* COUNTER */
+
+const start=new Date("2025-07-06");
+
+counter.innerText=`Since the day we met: ${Math.floor((new Date()-start)/86400000)} days ❤️`;
+
+
+
+/* NAME TYPE */
+
+const text="Samira…";let i=0;
+
+(function type(){
+
+if(i<text.length){
+
+nameEl.innerHTML+=text[i++];
+
+setTimeout(type,200);
+
+}})();
+
+
+
+/* HUG */
+
+hugBtn.onclick=()=>{
+
+heart.play().catch(()=>{});
+
+for(let i=0;i<10;i++)setTimeout(firework,i*150);
+
+nextBtn.classList.remove("hidden");
+
+};
+
+
+
+/* NEXT */
+
+nextBtn.onclick=()=>choice.classList.remove("hidden");
+
+
+
+/* CHOICE */
+
+window.yes=()=>{celebrate(10);showGallery()};
+
+window.always=()=>{celebrate(20);setInterval(rain,300);showGallery()};
+
+
+
+function celebrate(n){
+
+for(let i=0;i<n;i++)setTimeout(firework,i*150);
+
+}
+
+
+
+function showGallery(){
+
+choice.classList.add("hidden");
+
+gallery.classList.remove("hidden");
+
+finalBox.classList.remove("hidden");
+
+startMiniGame();
+
+}
+
+
+
+/* PHOTO FLIP */
+
+let c=0;
+
+document.addEventListener("click",()=>{
+
+if(gallery.classList.contains("hidden"))return;
+
+photos[c].classList.remove("active");
+
+c=(c+1)%photos.length;
+
+photos[c].classList.add("active");
+
+});
+
+
+
+/* FIREWORK */
+
+function firework(){
+
+const f=document.createElement("div");
+
+f.className="firework";
+
+f.style.left=Math.random()*100+"%";
+
+f.style.top=Math.random()*100+"%";
+
+document.body.appendChild(f);
+
+setTimeout(()=>f.remove(),1200);
+
+}
+
+
+
+/* RAIN */
+
+function rain(){
+
+const r=document.createElement("div");
+
+r.className="rain";
+
+r.innerHTML=Math.random()>0.5?"🌹":"🍫";
+
+r.style.left=Math.random()*100+"%";
+
+r.style.animationDuration=2+Math.random()*3+"s";
+
+document.body.appendChild(r);
+
+setTimeout(()=>r.remove(),5000);
+
+}
+
+
+
+/* MINI GAME */
+
+function startMiniGame(){
+
+const ch=document.createElement("div");
+
+ch.innerHTML="🍫";
+
+ch.style.position="fixed";
+
+ch.style.fontSize="40px";
+
+ch.style.left=Math.random()*80+"%";
+
+ch.style.top=Math.random()*80+"%";
+
+ch.style.cursor="pointer";
+
+document.body.appendChild(ch);
+
+
+
+ch.onclick=()=>{
+
+unwrap.play().catch(()=>{});
+
+ch.remove();
+
+firework();
+
+setTimeout(startMiniGame,1500);
+
+};
+
+}
+
+
+
+/* SHAKE */
+
+let last=0;
+
+window.addEventListener("devicemotion",e=>{
+
+const a=e.accelerationIncludingGravity;
+
+if(!a)return;
+
+const power=Math.abs(a.x)+Math.abs(a.y)+Math.abs(a.z);
+
+if(power>25 && Date.now()-last>1200){
+
+last=Date.now();
+
+for(let i=0;i<15;i++)setTimeout(firework,i*100);
+
+}
+
+});
+
+
+
+});
